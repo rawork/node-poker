@@ -1,0 +1,185 @@
+<% if (!gamer.active) { %>
+<div class="game-message-container">
+    <div class="game-message game-end">
+        <div class="row-fluid">
+            <div class="span4"><img src="/bundles/public/img/joker.jpg"></div>
+            <div class="span8">
+                <div class="text">Вы проиграли все фишки и выбываете из игры. :(</div>
+            </div>
+        </div>
+    </div>
+</div>
+<% } else if (gamer.active && game.state == 6) { %>
+<div class="game-message-container">
+    <div class="game-message game-end">
+        <div class="row-fluid">
+            <div class="span4"><img src="/bundles/public/img/joker.jpg"></div>
+            <div class="span8">
+                <div class="text">Поздравляем, Вы выиграли все фишки. :)</div>
+            </div>
+        </div>
+    </div>
+</div>
+<% } else if (game.state == 0) { %>
+<div class="game-message-container">
+    <div class="game-message game-start">
+        <div class="row-fluid">
+            <div class="span4"><img src="/bundles/public/img/joker.jpg"></div>
+            <div class="span8">
+                <div class="text">Приветствуем Вас.<br>Игра скоро начнется!</div>
+                <div class="timer" id="begin-timer"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<% } else if (game.state == 1) { %>
+    <% if (gamer.question.length == 1)  { %>
+    <div class="game-question-container">
+        <div class="game-question">
+            <div class="question-body">
+                <div class="title"><%-gamer.question[0].name %>:</div>
+                <ul class="question-answer">
+                    <li><i data-answer-id="1"></i> <%-gamer.question[0].answer1 %></li>
+                    <li><i data-answer-id="2"></i> <%-gamer.question[0].answer2 %></li>
+                    <li><i data-answer-id="3"></i> <%-gamer.question[0].answer3 %></li>
+                    <li><i data-answer-id="4"></i> <%-gamer.question[0].answer4 %></li>
+                </ul>
+            </div>
+            <div class="question-footer">
+                <button class="btn btn-warning" data-action="answer">ОТВЕТИТЬ</button>
+                <div class="question-timer">Время на ответ: <span id="answer-timer"></span></div>
+            </div>
+        </div>
+    </div>
+    <% } else if (gamer.times > 0) { %>
+    <div class="game-message-container">
+        <div class="game-message">
+            <div class="row-fluid">
+                <div class="span4"><img src="/bundles/public/img/joker.jpg"></div>
+                <div class="span8">
+                    <div class="text">
+                        <% if (gamer.times == 2) { %>Вы можете поменять одну  карту, ответив на вопрос в течение
+                        13 секунд. Кликните карту, которую хотите заменить, и нажмите "меняю". В
+                        случае неправильного ответа вы теряете одну фишку.
+                        <% } else { %>Вы можете поменять еще одну  карту, ответив на вопрос в течение 13
+                        секунд. Кликните карту, которую хотите заменить, и нажмите "меняю". В
+                        случае неправильного ответа вы теряете одну фишку.<% } %></div>
+                    <button class="btn btn-primary" data-action="change">Меняю</button>
+                    <button class="btn btn-danger" data-action="nochange">Не меняю</button>
+                    <div class="timer" id="change-timer"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <% } else { %>
+    <div class="game-message-container">
+        <div class="game-message">
+            <div class="row-fluid">
+                <div class="span4"><img src="/bundles/public/img/joker.jpg"></div>
+                <div class="span8">
+                    <div class="text">Ожидайте, другие игроки еще не закончили менять карты!</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <% } %>
+<% } else if (game.state == 2 || game.state == 3 || game.state == 4) { %>
+    <div class="game-flop">
+        <% for (var i in game.flop) { %>
+        <div class="card<% if ( (game.state == 3 || game.state == 4) && gamer.combination.indexOf(game.flop[i].name) > -1 ) { %> hint<% } %><% if (game.state == 4 && game.combination.indexOf(game.flop[i].name) > -1) { %> active<% } %>">
+            <% if (game.state == 3 || game.state == 4) { %><img src="/bundles/public/img/cards/<%-game.flop[i].name %>.png" />
+            <% } else { %>
+            <img src="/bundles/public/img/shirt.png" />
+            <% } %>
+        </div>
+        <% } %>
+    </div>
+    <div class="game-timer" id="game-timer"></div>
+    <% if (game.mover != gamer.seat && (game.state == 2 || game.state == 3)) { %><div class="game-wait">Ждите, другой игрок делает ход</div><% } %>
+<% } else if (game.state == 41) { %>
+<div class="game-message-container">
+    <div class="game-message">
+        <div class="row-fluid">
+            <div class="span4"><img src="/bundles/public/img/joker.jpg"></div>
+            <div class="span8">
+                <div class="text">Поскольку я выпал игроку за этим столом, все получают приз! Поздравляю!</div>
+                <div class="timer" id="joker-timer"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<% } else if (game.state == 5) { %>
+    <% if (gamer.question.length == 1) { %>
+    <div class="game-question-container">
+        <div class="game-question">
+            <div class="question-body">
+                <div class="title"><%-gamer.question[0].name %>:</div>
+                <ul class="question-answer">
+                    <li><i data-answer-id="1"></i> <%-gamer.question[0].answer1 %></li>
+                    <li><i data-answer-id="2"></i> <%-gamer.question[0].answer2 %></li>
+                    <li><i data-answer-id="3"></i> <%-gamer.question[0].answer3 %></li>
+                    <li><i data-answer-id="4"></i> <%-gamer.question[0].answer4 %></li>
+                </ul>
+            </div>
+            <div class="question-footer">
+                <button class="btn btn-warning" data-action="buyanswer">ОТВЕТИТЬ</button> <a data-action="nobuyanswer">без ответа</a>
+                <div class="row-fluid">
+                    <div class="span6 question-timer">Время на ответ: <span id="buy-timer"></span></div>
+                    <div class="span6 question-times">Попытка <span id="question-times"><%-gamer.question[0].number %></span> из <span id="question-max-times">3</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <% } else if (gamer.buy.length > 0) { %>
+    <div class="game-message-container">
+        <div class="game-message">
+            <div class="row-fluid">
+                <div class="span4"><img src="/bundles/public/img/joker.jpg"></div>
+                <div class="span8">
+                    <div class="text">Вы можете купить фишки
+                        в казино, отвечая на вопросы. Касса работает в течение 2 минут. За
+                        каждый правильный ответ вы получаете количество фишек, равное
+                        минимальной ставке на момент игры.</div>
+                    <div class="timer" id="buy-timer"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <% } else { %>
+    <div class="game-message-container">
+        <div class="game-message">
+            <div class="row-fluid">
+                <div class="span4"><img src="/bundles/public/img/joker.jpg"></div>
+                <div class="span8">
+                    <div class="text">Ожидайте, другие игроки покупают фишки!</div>
+                    <div class="timer" id="buy-timer"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <% } %>
+<% } else if (game.state == 7) { %>
+<div class="game-message-container">
+    <div class="game-message game-end">
+        <div class="row-fluid">
+            <div class="span4"><img src="/bundles/public/img/joker.jpg"></div>
+            <div class="span8">
+                <div class="text">Раунд завершен. Можете немного отдохнуть.</div>
+                <div class="timer" id="round-end-timer"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<% } else if (game.state == 8) { %>
+<div class="game-message-container">
+    <div class="game-message game-end">
+        <div class="row-fluid">
+            <div class="span4"><img src="/bundles/public/img/joker.jpg"></div>
+            <div class="span8">
+                <div class="text">Все соперники отлучились. Ждемс.</div>
+                <div class="timer" id="wait-timer"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<% } %>
