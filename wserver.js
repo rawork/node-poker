@@ -16,7 +16,7 @@ var app = express();
 
 var server = http.createServer(app);
 
-server.listen(3001);
+server.listen(nconf.get('port'));
 
 var webSocketServer = new WebSocketServer({server: server});
 webSocketServer.on('connection', function(ws) {

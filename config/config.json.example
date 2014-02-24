@@ -3,5 +3,6 @@
     "dbuser": "",
     "dbhost": "localhost",
     "dbpass": "",
-    "dbport": "27017"
+    "dbport": "27017",
+    "port"  : 8080
 }
