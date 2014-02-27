@@ -3,7 +3,7 @@ var http = require('http');
 var express = require('express');
 var MongoClient = require('mongodb').MongoClient;
 var nconf = require('nconf');
-var fs = require('fs')
+var fs = require('fs');
 var ejs = require('ejs');
 var path = __dirname + '/templates/table.ejs';
 var str = fs.readFileSync(path, 'utf8');
@@ -21,7 +21,8 @@ server.listen(nconf.get('port'));
 var webSocketServer = new WebSocketServer({server: server});
 webSocketServer.on('connection', function(ws) {
 
-    var startDate = new Date();
+//    var startDate = new Date();
+    var checktime = 0;
 
     var timer = setInterval(function() {
         MongoClient.connect('mongodb://'+ nconf.get('dbuser') +':'+ nconf.get('dbpass') +'@'+ nconf.get('dbhost') +':'+ nconf.get('dbport') +'/'+ nconf.get('dbbase'), function(err, db) {
@@ -30,18 +31,19 @@ webSocketServer.on('connection', function(ws) {
                 return;
             }
 
-            var dateOffset = 8000;
-            var checkDate = new Date();
-            checkDate.setTime(checkDate.getTime() - dateOffset);
-            var checktime = parseInt(checkDate.getTime() / 1000 );
+//            var dateOffset = 8000;
+//            var checkDate = new Date();
+//            checkDate.setTime(checkDate.getTime() - dateOffset);
+//            var checktime = parseInt(checkDate.getTime() / 1000 );
             var urlParts = ws.upgradeReq.url.split('/');
             var gameID = +urlParts[2];
             var gamerID = +urlParts[3];
 
             var collection = db.collection('board');
             collection.findOne({board: gameID, state: {'$ne': 6},  'updated': {'$gt': checktime}}, function(err, document) {
-//                console.log(checktime, document);
+//                console.log(checktime);
                 if (document) {
+                    checktime = document.updated;
                     var gamer = db.collection('gamer');
 
                     console.log(checktime, document.state);
